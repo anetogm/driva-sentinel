@@ -1,0 +1,14 @@
+apiVersion: v2
+name: kindmelody
+description: KindMelody Security Scanner - Enterprise-grade website security analysis platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - security
+  - scanner
+  - cybersecurity
+  - vulnerability
+c maintainers:
+  - name: KindMelody Team
+    email: team@kindmelody.dev

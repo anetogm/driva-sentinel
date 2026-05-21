@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: kindmelody
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+  - postgres-statefulset.yaml
+  - postgres-service.yaml
+  - redis-deployment.yaml
+  - backend-deployment.yaml
+  - backend-service.yaml
+  - backend-hpa.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml
+  - worker-deployment.yaml
+  - worker-hpa.yaml
+  - ingress.yaml
+
+images:
+  - name: kindmelody/backend
+    newTag: latest
+  - name: kindmelody/frontend
+    newTag: latest
+  - name: kindmelody/worker
+    newTag: latest

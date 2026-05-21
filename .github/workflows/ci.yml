@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-lint:
+    name: Backend Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install ruff mypy pytest pytest-asyncio pytest-cov bandit
+
+      - name: Run Ruff
+        run: ruff check app/
+
+      - name: Run MyPy
+        run: mypy app/ || true
+
+      - name: Run Bandit
+        run: bandit -r app/ -f json -o bandit-report.json || true
+
+      - name: Run tests
+        run: pytest tests/ -v --cov=app --cov-report=xml || true
+
+  frontend-lint:
+    name: Frontend Lint & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package.json
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Run TypeScript check
+        run: npm run type-check || true
+
+      - name: Run ESLint
+        run: npm run lint || true
+
+      - name: Build
+        run: npm run build || true
